@@ -439,6 +439,9 @@
 
   </div>
 
+  <!-- EmailJS CDN — no download needed -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -456,7 +459,51 @@
     const fansContainer   = document.getElementById('fans-container');
 
     const suicideActiveSet = new Set();
+    const suicidePrevState = new Map();
     let beepFn = null, alarmInterval = null, alarmCtx = null;
+
+    // ── EmailJS config ──
+    const EJS_PUBLIC_KEY  = 'FH73EjQDR1UNVsSgu';
+    const EJS_SERVICE_ID  = 'service_xsbi5zq';
+    const EJS_TEMPLATE_ID = 'template_qarqcab';
+
+    emailjs.init({ publicKey: EJS_PUBLIC_KEY });
+
+    // Fetch all non-empty emails from SOS node
+    async function fetchSOSEmails() {
+      try {
+        const snap = await get(ref(db, 'SOS'));
+        if (!snap.exists()) return [];
+        const data = snap.val();
+        return Object.values(data).filter(v => typeof v === 'string' && v.trim() !== '');
+      } catch (e) {
+        console.error('Failed to fetch SOS emails:', e);
+        return [];
+      }
+    }
+
+    async function sendSuicideEmail(fanName, fanId) {
+      if (EJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID') {
+        console.warn('EmailJS template ID not set yet.');
+        return;
+      }
+      const emails = await fetchSOSEmails();
+      if (emails.length === 0) { console.warn('No SOS emails found in Firebase.'); return; }
+
+      // Send to each email independently
+      for (const email of emails) {
+        emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
+          to_email:  email,
+          fan_name:  fanName,
+          fan_id:    fanId,
+          timestamp: new Date().toLocaleString(),
+        }).then(() => {
+          console.log(`Alert sent to ${email}`);
+        }).catch(err => {
+          console.error(`Failed to send to ${email}:`, err);
+        });
+      }
+    }
 
     function buildAlarmSound() {
       try {
@@ -716,6 +763,14 @@
 
         // Full red card blink
         card.classList.toggle('suicide-alert', suicide);
+
+        // Detect flip: false → true (send email only once per event)
+        const prevSuicide = suicidePrevState.get(fanId);
+        if (suicide && prevSuicide === false) {
+          const displayName = localName || `Fan Unit ${fanId}`;
+          sendSuicideEmail(displayName, fanId);
+        }
+        suicidePrevState.set(fanId, suicide);
 
         if (suicide) suicideActiveSet.add(fanId);
         else         suicideActiveSet.delete(fanId);
