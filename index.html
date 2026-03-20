@@ -527,7 +527,7 @@
     function startAlarm() {
       if (alarmInterval) return;
       if (!beepFn) beepFn = buildAlarmSound();
-      if (beepFn) { beepFn(); alarmInterval = setInterval(beepFn, 1500); }
+      if (beepFn) { beepFn(); alarmInterval = setInterval(beepFn, 30); }
     }
 
     function stopAlarm() {
