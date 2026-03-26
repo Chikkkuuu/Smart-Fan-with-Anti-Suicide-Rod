@@ -4,20 +4,16 @@
 #include "Sensor.h"
 #include "CloudManager.h"
 
-// --- INSTANTIATE GLOBALS ---
-// (We declare them here so memory is only allocated once for the whole project)
 float baselineDistance = 0;
 volatile int currentFanSpeed = 0; 
 bool isLocked = false; 
 
-// --- LOCAL VARIABLES ---
 int previousFanSpeed = -1; 
 unsigned long lastCalibrationTime = 0;
 unsigned long lastHttpTime = 0;
 unsigned long lastLockCheckTime = 0;
 hw_timer_t * timer = NULL;
 
-// --- HARDWARE TIMER ---
 void IRAM_ATTR onTimer() {
   if (currentFanSpeed > 0 && !isLocked) {
     digitalWrite(STEP_PIN, HIGH);
@@ -47,7 +43,6 @@ void setup() {
 }
 
 void loop() {
-  // STATE 1: RECOVERY LOOP
   if (isLocked) {
     if (millis() - lastLockCheckTime >= LOCK_CHECK_INTERVAL) {
       lastLockCheckTime = millis();
@@ -56,7 +51,6 @@ void loop() {
     return; 
   }
 
-  // STATE 2: NORMAL OPERATION
   float currentDist = getDistance();
   if (currentDist > (baselineDistance + 15.0)) { 
     triggerPanicMode(); 
