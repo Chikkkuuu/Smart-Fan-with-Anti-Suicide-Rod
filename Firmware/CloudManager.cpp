@@ -15,7 +15,6 @@ void setupWiFi() {
 void getFanSpeedFromFirebase() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    // URL UPDATED HERE
     String url = "https://" + String(DATABASE_URL) + "/Fan%20Number/" + String(FAN_ID) + "/Fan%20Speed.json?auth=" + String(DATABASE_SECRET);
     http.begin(url);
     if (http.GET() > 0) {
@@ -29,7 +28,6 @@ void getFanSpeedFromFirebase() {
 void checkLockStatusFromFirebase() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    // URL UPDATED HERE
     String url = "https://" + String(DATABASE_URL) + "/Fan%20Number/" + String(FAN_ID) + "/Status.json?auth=" + String(DATABASE_SECRET);
     http.begin(url);
     if (http.GET() > 0) {
@@ -45,7 +43,7 @@ void checkLockStatusFromFirebase() {
         Serial.println("-> Recalibrating baseline...");
         baselineDistance = getDistance(); 
         
-        // URL UPDATED HERE
+
         String url2 = "https://" + String(DATABASE_URL) + "/Fan%20Number/" + String(FAN_ID) + "/Suicide.json?auth=" + String(DATABASE_SECRET);
         http.begin(url2);
         http.addHeader("Content-Type", "application/json");
@@ -77,14 +75,12 @@ void triggerPanicMode() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     
-    // URL UPDATED HERE
     String url1 = "https://" + String(DATABASE_URL) + "/Fan%20Number/" + String(FAN_ID) + "/Suicide.json?auth=" + String(DATABASE_SECRET);
     http.begin(url1);
     http.addHeader("Content-Type", "application/json");
     http.PUT("true");
     http.end();
 
-    // URL UPDATED HERE
     String url2 = "https://" + String(DATABASE_URL) + "/Fan%20Number/" + String(FAN_ID) + "/Status.json?auth=" + String(DATABASE_SECRET);
     http.begin(url2);
     http.addHeader("Content-Type", "application/json");
