@@ -42,7 +42,6 @@
       margin: 0 auto;
     }
 
-    /* Grid — mobile first */
     #fans-container {
       display: grid;
       grid-template-columns: 1fr;
@@ -61,11 +60,9 @@
       #fans-container { grid-template-columns: repeat(4, 1fr); gap: 12px; }
     }
 
-    /* Screens */
     #login-screen    { display: block; }
     #dashboard-screen { display: none; }
 
-    /* Login */
     .login-wrap {
       min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
@@ -83,7 +80,6 @@
       .login-card { padding: 36px 32px; border-radius: 20px; }
     }
 
-    /* Lock icon — simple CSS circle instead of SVG container */
     .login-icon-wrap {
       width: 48px; height: 48px;
       border-radius: 12px;
@@ -167,7 +163,6 @@
     .primary-btn:hover  { background: var(--primary-dark); }
     .primary-btn:active { transform: scale(0.99); }
 
-    /* Dashboard header */
     .dash-header {
       display: flex; align-items: center;
       justify-content: space-between;
@@ -192,10 +187,8 @@
       .dash-header h1 { font-size: 1.5rem; }
     }
 
-    /* Alarm banner — kept for audio trigger, visually hidden when cards blink */
     #alarm-banner { display: none; }
 
-    /* Fan cards */
     .fan-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -204,8 +197,7 @@
       box-shadow: var(--shadow);
       transition: background 0.3s, border-color 0.3s;
     }
-
-    /* Full red card blink on suicide */
+    
     .fan-card.suicide-alert {
       background: #dc2626;
       border-color: #dc2626;
@@ -216,7 +208,6 @@
       50%      { background: #b91c1c; box-shadow: 0 0 0 6px rgba(220,38,38,0); }
     }
 
-    /* Override all text/element colors inside a blinking card */
     .fan-card.suicide-alert .fan-local-name,
     .fan-card.suicide-alert .fan-id-sub,
     .fan-card.suicide-alert .device-status,
@@ -232,10 +223,8 @@
     .fan-card.suicide-alert .device-dot { background: rgba(255,255,255,0.5); box-shadow: none; }
     .fan-card.suicide-alert .device-dot.on { background: #fff; }
 
-    /* Card layout */
     .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 
-    /* Fan initial circle — replaces SVG avatar */
     .fan-initial {
       width: 34px; height: 34px;
       border-radius: 8px;
@@ -369,7 +358,6 @@
       .primary-btn { padding: 14px; font-size: 1rem; }
     }
 
-    /* Empty / loading */
     .empty-state {
       grid-column: 1 / -1; text-align: center; padding: 48px 20px;
       color: var(--text-3); font-weight: 500; font-size: 0.88rem;
@@ -391,7 +379,6 @@
 
   <div class="container">
 
-    <!-- Login -->
     <div id="login-screen">
       <div class="login-wrap">
         <div class="login-card">
@@ -423,7 +410,6 @@
       </div>
     </div>
 
-    <!-- Dashboard -->
     <div id="dashboard-screen">
       <div class="dash-header">
         <h1>Fan Control</h1>
@@ -440,7 +426,6 @@
 
   </div>
 
-  <!-- EmailJS CDN — no download needed -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <script type="module">
@@ -463,14 +448,12 @@
     const suicidePrevState = new Map();
     let beepFn = null, alarmInterval = null, alarmCtx = null;
 
-    // ── EmailJS config ──
     const EJS_PUBLIC_KEY  = 'FH73EjQDR1UNVsSgu';
     const EJS_SERVICE_ID  = 'service_xsbi5zq';
     const EJS_TEMPLATE_ID = 'template_qarqcab';
 
     emailjs.init({ publicKey: EJS_PUBLIC_KEY });
 
-    // Fetch all non-empty emails from SOS node
     async function fetchSOSEmails() {
       try {
         const snap = await get(ref(db, 'SOS'));
@@ -491,7 +474,6 @@
       const emails = await fetchSOSEmails();
       if (emails.length === 0) { console.warn('No SOS emails found in Firebase.'); return; }
 
-      // Send to each email independently
       for (const email of emails) {
         emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
           to_email:  email,
@@ -540,7 +522,6 @@
       else stopAlarm();
     }
 
-    // Show/hide password
     const showPassBtn = document.getElementById('show-pass-btn');
     let passVisible = false;
     showPassBtn.addEventListener('click', (e) => {
@@ -553,7 +534,6 @@
       passInput.focus();
     });
 
-    // Login
     loginBtn.addEventListener('click', doLogin);
     passInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
@@ -602,7 +582,6 @@
       card.className = 'fan-card';
       card.id = `card-${fanId}`;
 
-      // Initial letter for the avatar — clean, no SVG
       const initial = fanId.charAt(0).toUpperCase();
 
       card.innerHTML = `
@@ -660,7 +639,6 @@
 
       fansContainer.appendChild(card);
 
-      // Copy link
       document.getElementById(`copy-${fanId}`).addEventListener('click', () => {
         const link = `${window.location.origin}/Web App/control.html?fan=${encodeURIComponent(fanId)}&key=${encodeURIComponent(key)}`;
         navigator.clipboard.writeText(link).then(() => {
@@ -671,7 +649,6 @@
         });
       });
 
-      // Editable name
       const localNameEl   = document.getElementById(`local-name-${fanId}`);
       const nameInput     = document.getElementById(`name-input-${fanId}`);
       const editBtn       = document.getElementById(`edit-name-btn-${fanId}`);
@@ -709,17 +686,14 @@
         if (e.key === 'Escape') exitEdit();
       });
 
-      // Status
       document.getElementById(`sp-normal-${fanId}`).addEventListener('click', () => {
         set(ref(db, `Fan Number/${fanId}/Status`), 'Normal').catch(console.error);
       });
 
-      // Suicide dismiss
       document.getElementById(`suicide-off-btn-${fanId}`).addEventListener('click', () => {
         set(ref(db, `Fan Number/${fanId}/Suicide`), false).catch(console.error);
       });
 
-      // Realtime
       onValue(ref(db, `Fan Number/${fanId}`), (snap) => {
         const data      = snap.val() || {};
         const speed     = data['Fan Speed']  ?? 0;
@@ -732,20 +706,17 @@
           if (el) el.textContent = localName;
         }
 
-        // Update avatar initial if local name set
         const avatarEl = document.getElementById(`avatar-${fanId}`);
         if (avatarEl) {
           const displayName = localName || `Fan Unit ${fanId}`;
           avatarEl.textContent = displayName.charAt(0).toUpperCase();
         }
 
-        // On/Off dot
         const dot   = document.getElementById(`dot-${fanId}`);
         const label = document.getElementById(`label-${fanId}`);
         if (dot)   dot.classList.toggle('on', speed > 0);
         if (label) label.textContent = speed > 0 ? 'On' : 'Off';
 
-        // Status pill
         const normalBtn   = document.getElementById(`sp-normal-${fanId}`);
         const lockedChip  = document.getElementById(`chip-locked-${fanId}`);
         if (normalBtn && lockedChip) {
@@ -753,7 +724,6 @@
           lockedChip.classList.toggle('visible', status === 'Locked');
         }
 
-        // Suicide
         const suicideOffBtn = document.getElementById(`suicide-off-btn-${fanId}`);
         const suicideRow    = document.getElementById(`suicide-row-${fanId}`);
         const suicideLabel  = document.getElementById(`suicide-label-${fanId}`);
@@ -762,10 +732,8 @@
         if (suicideOffBtn) suicideOffBtn.style.display = suicide ? 'inline-block' : 'none';
         if (suicideRow)    suicideRow.classList.toggle('is-triggered', suicide);
 
-        // Full red card blink
         card.classList.toggle('suicide-alert', suicide);
 
-        // Detect flip: false → true (send email only once per event)
         const prevSuicide = suicidePrevState.get(fanId);
         if (suicide && prevSuicide === false) {
           const displayName = localName || `Fan Unit ${fanId}`;
