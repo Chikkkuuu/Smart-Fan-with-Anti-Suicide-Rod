@@ -4,13 +4,13 @@
 #include <Arduino.h>
 
 // --- CREDENTIALS ---
-#define WIFI_SSID "Wokwi-GUEST" 
-#define WIFI_PASSWORD ""
-#define DATABASE_URL "smart-fan-with-anti-suicide-default-rtdb.asia-southeast1.firebasedatabase.app"
-#define DATABASE_SECRET "QV48fa4GHFmilyuTywfEDCVyjPkO6TyWRUEEwJle" 
+#define WIFI_SSID "<wifi_name>" 
+#define WIFI_PASSWORD "<wifi_password>"
+#define DATABASE_URL "<database_url>"
+#define DATABASE_SECRET "<database_secret>" 
 
 // --- DEVICE IDENTITY ---
-#define FAN_ID "001" // <--- ADD THIS LINE! Change this when flashing a new board.
+#define FAN_ID "001" 
 
 // --- PIN DEFINITIONS ---
 #define TRIG_PIN 4
