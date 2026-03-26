@@ -46,5 +46,5 @@ Anti_Suicide_Fan/
 ## Professional Profile
 * **Developer**: Ritul Raj Bhakat (Firmware Developer)
 * **Core Expertise**: Embedded Systems, IoT Architecture, and Rapid Prototyping
-* **Contact**: [ritulraj384@gmail.com](mailto:ritulraj384@gmail.com)
-* **Links**: [LinkedIn](https://www.linkedin.com/in/ritul-raj-bhakat-521202277/) | [GitHub Portfolio](https://github.com/Chikkkuuu)
+* **Contact:** [ritulraj384@gmail.com](mailto:ritulraj384@gmail.com) | [LinkedIn](https://www.linkedin.com/in/ritul-raj-bhakat-521202277/) | [Github](https://github.com/Chikkkuuu) | [Portfolio](https://ritulrajbhakatportfolio.vercel.app/)
+
