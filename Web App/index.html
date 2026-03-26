@@ -662,7 +662,7 @@
 
       // Copy link
       document.getElementById(`copy-${fanId}`).addEventListener('click', () => {
-        const link = `${window.location.origin}/control.html?fan=${encodeURIComponent(fanId)}&key=${encodeURIComponent(key)}`;
+        const link = `${window.location.origin}/Web App/control.html?fan=${encodeURIComponent(fanId)}&key=${encodeURIComponent(key)}`;
         navigator.clipboard.writeText(link).then(() => {
           const btn = document.getElementById(`copy-${fanId}`);
           btn.textContent = 'Copied!';
