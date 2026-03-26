@@ -30,7 +30,6 @@
       position: relative; overflow: hidden;
     }
 
-    /* Screens */
     #loader-screen, #error-screen, #ui-screen {
       display: none; position: relative; z-index: 1;
       width: 100%; max-width: 320px;
@@ -38,7 +37,6 @@
     }
     #loader-screen.active, #error-screen.active, #ui-screen.active { display: flex; }
 
-    /* Loader */
     .loader-card, .error-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -60,7 +58,6 @@
     .error-card h1 { font-size: 1.2rem; font-weight: 700; color: var(--text); }
     .error-card p  { font-size: 0.78rem; color: var(--text-3); margin-top: 8px; }
 
-    /* Main card */
     .main-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -70,7 +67,6 @@
       position: relative;
     }
 
-    /* Header — just text, no avatar */
     .card-header {
       display: flex; align-items: center;
       justify-content: space-between;
@@ -113,7 +109,6 @@
     .speed-badge.s4 { color: #fbbf24; border-color: #fbbf2430; }
     .speed-badge.s5 { color: #f87171; border-color: #f8717130; }
 
-    /* ── Dial ── */
     .dial-wrap {
       position: relative;
       width: min(230px, calc(100vw - 72px));
@@ -121,7 +116,6 @@
       margin: 0 auto 22px;
     }
 
-    /* Outer ring — dark neumorphic */
     .dial-plate {
       position: absolute; inset: 0; border-radius: 50%;
       background: #161616;
@@ -155,7 +149,6 @@
     .dial-label.active-label.s5 { color: #f87171; }
     .dial-label.label-off { font-size: 0.5rem; letter-spacing: 0.05em; font-weight: 700; }
 
-    /* Knob — dark neumorphic */
     .knob-ring {
       position: absolute; inset: 26px; border-radius: 50%;
       background: linear-gradient(145deg, #1e1e1e, #111111);
@@ -168,7 +161,6 @@
     }
     .knob-ring:active { cursor: grabbing; }
 
-    /* Indicator line instead of dot */
     .knob-indicator {
       position: absolute;
       top: 10px; left: 50%;
@@ -185,7 +177,6 @@
     .knob-indicator.s4 { background: #fbbf24; box-shadow: 0 0 10px rgba(251,191,36,0.6); }
     .knob-indicator.s5 { background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.6); }
 
-    /* Center cap */
     .knob-cap {
       position: absolute; inset: 24px; border-radius: 50%;
       background: #0f0f0f;
@@ -210,7 +201,6 @@
       color: var(--text-3);
     }
 
-    /* Speed strip */
     .speed-strip {
       display: flex; gap: 5px; justify-content: center;
       margin-bottom: 18px;
@@ -227,7 +217,6 @@
     .strip-seg.lit.s4 { background: #fbbf24; }
     .strip-seg.lit.s5 { background: #f87171; }
 
-    /* OFF button */
     .off-btn {
       width: 100%;
       padding: 12px;
@@ -250,7 +239,6 @@
       color: var(--text);
     }
 
-    /* Locked overlay */
     #locked-overlay {
       display: none; position: absolute; inset: 0;
       border-radius: 24px;
@@ -267,7 +255,6 @@
 </head>
 <body>
 
-  <!-- Loader -->
   <div id="loader-screen" class="active">
     <div class="loader-card">
       <div class="spinner"></div>
@@ -276,7 +263,6 @@
     </div>
   </div>
 
-  <!-- Error -->
   <div id="error-screen">
     <div class="error-card">
       <div class="e-icon">
@@ -289,11 +275,9 @@
     </div>
   </div>
 
-  <!-- Main UI -->
   <div id="ui-screen">
     <div class="main-card">
 
-      <!-- Locked overlay -->
       <div id="locked-overlay">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
@@ -302,7 +286,6 @@
         <p>Disabled by administrator</p>
       </div>
 
-      <!-- Header -->
       <div class="card-header">
         <div class="header-left">
           <h1 id="fan-header">Fan</h1>
@@ -314,7 +297,6 @@
         <span class="speed-badge s0" id="speed-badge">OFF</span>
       </div>
 
-      <!-- Dial -->
       <div class="dial-wrap" id="dial-body">
         <div class="dial-plate"></div>
         <svg class="ticks-svg" id="ticks-svg" viewBox="0 0 230 230"></svg>
@@ -328,7 +310,6 @@
         </div>
       </div>
 
-      <!-- Strip -->
       <div class="speed-strip">
         <div class="strip-seg s1" data-seg="1"></div>
         <div class="strip-seg s2" data-seg="2"></div>
@@ -337,7 +318,6 @@
         <div class="strip-seg s5" data-seg="5"></div>
       </div>
 
-      <!-- OFF -->
       <button class="off-btn" id="off-btn">Turn off</button>
 
     </div>
@@ -375,7 +355,6 @@
 
     const CX = 115, CY = 115;
 
-    // Build tick marks — subtle, dark
     function buildTicks() {
       speedAngles.forEach((angleDeg, i) => {
         const rad = (angleDeg - 90) * Math.PI / 180;
@@ -390,7 +369,6 @@
         line.setAttribute('stroke-linecap', 'round');
         ticksSvg.appendChild(line);
       });
-      // Minor ticks
       for (let i = 0; i < 5; i++) {
         for (let j = 1; j <= 3; j++) {
           const angleDeg = speedAngles[i] + (speedAngles[i+1] - speedAngles[i]) * (j / 4);
@@ -409,7 +387,6 @@
       }
     }
 
-    // Build labels
     function buildLabels() {
       const labelR = 107;
       [['OFF', 0], ['1', 1], ['2', 2], ['3', 3], ['4', 4], ['5', 5]].forEach(([txt, speed]) => {
@@ -442,20 +419,16 @@
       knobName.textContent = speedNames[speed];
       knobDot.className    = `knob-indicator s${speed}`;
 
-      // Status row
       statusDot.classList.toggle('on', speed > 0);
       statusTxt.textContent = speed > 0 ? 'Running' : 'Standby';
 
-      // Speed badge top right
       speedBadge.textContent = speedBadgeLabels[speed];
       speedBadge.className   = `speed-badge s${speed}`;
 
-      // Strip
       segs.forEach(seg => {
         seg.classList.toggle('lit', parseInt(seg.dataset.seg) <= speed);
       });
 
-      // Active dial label
       document.querySelectorAll('.dial-label').forEach(lbl => {
         const s = parseInt(lbl.dataset.speed);
         lbl.classList.toggle('active-label', s === speed);
@@ -463,14 +436,11 @@
         if (s === speed && speed > 0) lbl.classList.add(`s${speed}`);
       });
 
-      // OFF button
       offBtn.classList.toggle('active', speed === 0);
 
-      // Locked
       lockedOverlay.classList.toggle('show', status === 'Locked');
     }
 
-    // Firebase
     const params    = new URLSearchParams(window.location.search);
     const fanId     = params.get('fan');
     const activeKey = params.get('key');
@@ -509,7 +479,6 @@
 
       function isLocked() { return currentStatus === 'Locked'; }
 
-      // Label clicks
       dialLabels.querySelectorAll('.dial-label').forEach(lbl => {
         lbl.addEventListener('click', () => {
           if (isLocked()) return;
@@ -517,13 +486,11 @@
         });
       });
 
-      // OFF
       offBtn.addEventListener('click', () => {
         if (isLocked()) return;
         set(speedRef, 0).catch(console.error);
       });
-
-      // Drag
+      
       let dragging = false;
 
       function getDialCenter() {
