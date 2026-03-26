@@ -52,7 +52,7 @@ void loop() {
   }
 
   float currentDist = getDistance();
-  if (currentDist > (baselineDistance + 15.0)) { 
+  if (currentDist > (baselineDistance + 5.0)) { 
     triggerPanicMode(); 
     return; 
   }
